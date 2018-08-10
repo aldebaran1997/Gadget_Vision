@@ -1,5 +1,4 @@
 import socket
-import os
 import time
 import sys
 
@@ -15,15 +14,14 @@ def nameGen() :
     Min = t.tm_min
     Sec = t.tm_sec
 
-    filename = str(Year)+str(Month)+str(MDay)+'_'+str(Hour)+':'+str(Min)+':'+str(Sec)+'.png'
+    filename = str(Year)+str(Month)+str(MDay)+'_'+str(Hour)+str(Min)+str(Sec)+'.png'
 
     return filename
 
-ServerIP = '127.0.0.1'
+ServerIP = '192.168.0.2'
 PORT = 5010
 
-write_path = '/home/cae/Desktop/'
-    #'c:\\Users\\Owner\\Desktop\\'
+write_path = "C:\\Users\\Owner\\Desktop\\"
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((ServerIP,PORT))
@@ -42,7 +40,7 @@ while(1) :
         break
 
     if conn is not None :
-
+        print("========================================")
         print("Client : ", addr[0], addr[1])
 
         data = conn.recv(1024)
@@ -59,12 +57,12 @@ while(1) :
 
             filename = nameGen()
 
-            with open(write_path+filename,'wb') as file :
+            with open(write_path+str(filename),'wb') as file :
                 file.write(buffer)
 
             print(filename,sys.getsizeof(buffer),'KB')
             print("Data Recieved ......")
-
+            print("========================================")
         data = None
 
         conn.close
