@@ -60,7 +60,9 @@ while(cam.isOpened()) :
 
     if q > 500 :
         cv2.imwrite('/home/cae/Desktop/result.png', result)
-        Trans.Transfer()
+        cv2.imwrite('/home/cae/Desktop/result2.png', dst)
+        Trans.Transfer(filename='result.png')
+        Trans.Transfer(filename='result2.png')
         q=0
 #        for i in range(len(result)) :
 #            for j in range(len(result[i,:])) :
