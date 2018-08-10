@@ -7,5 +7,5 @@ cd /home/cae/Gadget_Vision/vision/gadget-test/Detector/
 python3 detector.py
 
 echo "program finished"
-
-sleep 3
+echo "========================="
+sleep 2
