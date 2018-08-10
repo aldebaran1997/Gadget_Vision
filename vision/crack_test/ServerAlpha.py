@@ -2,6 +2,22 @@ import socket
 import time
 import sys
 
+def dirGen(path) :
+    t = time.localtime()
+
+    Year = t.tm_year
+    Month = t.tm_mon
+    MDay = t.tm_mday
+    WDay = t.tm_wday
+    Hour = t.tm_hour
+    Min = t.tm_min
+    Sec = t.tm_sec
+    
+    dirname = str(Year)+str(Month)+str(MDay)+'_'+str(Hour)+str(Min)
+
+    mkdir(path+dirname)
+    
+    return path+dirname
 
 def nameGen() :
     t = time.localtime()
@@ -22,6 +38,8 @@ ServerIP = '192.168.0.2'
 PORT = 5010
 
 write_path = "C:\\Users\\Owner\\Desktop\\"
+
+write_path = dirGen(write_path)
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((ServerIP,PORT))

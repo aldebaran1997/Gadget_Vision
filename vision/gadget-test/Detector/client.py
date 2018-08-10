@@ -4,7 +4,7 @@ import time
 
 class TrasnferClient() :
 
-    def __init__(self,ServerIP='192.168.0.2',PORT=5010,read_path='/home/cae/Desktop/',filename='crack.png') :
+    def __init__(self,ServerIP='192.168.0.2',PORT=5010,read_path='/home/cae/Desktop/',filename='result.png') :
 
         self.read_path = read_path
         self.filename = filename
