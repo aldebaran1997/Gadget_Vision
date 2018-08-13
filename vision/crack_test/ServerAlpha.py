@@ -1,6 +1,7 @@
 import socket
 import time
 import sys
+import os
 
 def dirGen(path) :
     t = time.localtime()
@@ -11,13 +12,14 @@ def dirGen(path) :
     WDay = t.tm_wday
     Hour = t.tm_hour
     Min = t.tm_min
-    Sec = t.tm_sec
     
     dirname = str(Year)+str(Month)+str(MDay)+'_'+str(Hour)+str(Min)
 
-    mkdir(path+dirname)
+    dirname =path+dirname
+
+    os.mkdir(dirname)
     
-    return path+dirname
+    return dirname
 
 def nameGen() :
     t = time.localtime()
@@ -39,8 +41,8 @@ PORT = 5010
 
 write_path = "C:\\Users\\Owner\\Desktop\\"
 
-write_path = dirGen(write_path)
-
+write_path = dirGen(str(write_path))
+print("Directory : ", write_path)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((ServerIP,PORT))
 sock.listen(5)
@@ -74,7 +76,7 @@ while(1) :
                 buffer += data
 
             filename = nameGen()
-
+            print("File : ",write_path+filename)
             with open(write_path+str(filename),'wb') as file :
                 file.write(buffer)
 
