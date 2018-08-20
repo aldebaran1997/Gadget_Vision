@@ -9,7 +9,7 @@ class TrasnferClient() :
         self.ServerIP = ServerIP
         self.PORT = PORT
 
-    def Transfer(self,read_path='/home/cae/Desktop/',filename='result.png') :
+    def Transfer(self,read_path='/home/cae-lab/Desktop/',filename='result.png') :
 
         sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 

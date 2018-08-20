@@ -86,5 +86,3 @@ while(1) :
         data = None
 
         conn.close
-
-
