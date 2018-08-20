@@ -1,4 +1,5 @@
-#!/bin/sh
-sudo apt update -y
-sudo apt upgrade -y
-read IN
+#!/bin/bash
+sudo apt update
+sudo apt full-upgrade
+sudo apt autoremove
+sudo apt autoclean
