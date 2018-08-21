@@ -1,15 +1,19 @@
+#Import modules
 import cv2
 import numpy as np
-import distortion
 import auto_canny as auto
+import distortion
 
+#Kernel for morphologyEx
 kernel = np.ones((3,3), np.uint8)
 
+#Calibration object (custom class)
 Dist = distortion.distortion()
 
-def dp(gray) :
+#Image border construction
+def dp(img) :
 
-    j, i = gray.shape[:2]
+    j, i = img.shape[:2]
 
     points = []
     point_x1 = []
@@ -17,9 +21,10 @@ def dp(gray) :
     point_y1 = []
     point_y2 = []
 
+    #Border from up to down
     for x in range(i) :
         for y in range(j) :
-            if gray[y,x] == 255 :
+            if img[y,x] == 255 :
                 points.append((x,y))
                 point_x1.append((x,y))
                 break
@@ -29,9 +34,10 @@ def dp(gray) :
                     point_x2.append((x, 0))
                     break
 
+    #Border from down to up
     for x in range(i) :
         for y in range(j) :
-            if gray[j-1-y,x] == 255 :
+            if img[j-1-y,x] == 255 :
                 points.append((x,j-1-y))
                 point_x2.append((x, j-1-y))
                 break
@@ -41,9 +47,10 @@ def dp(gray) :
                     point_x1.append((x,j-1))
                     break
 
+    #Border from left to right
     for y in range(j) :
         for x in range(i) :
-            if gray[y,x] == 255 :
+            if img[y,x] == 255 :
                 points.append((x,y))
                 point_y1.append((x,y))
                 break
@@ -53,9 +60,10 @@ def dp(gray) :
                     point_y2.append((0, y))
                     break
 
+    #Border from right to left
     for y in range(j) :
         for x in range(i) :
-            if gray[y,i-1-x] == 255 :
+            if img[y,i-1-x] == 255 :
                 points.append((i-1-x,y))
                 point_y2.append((i-1-x, y))
                 break
@@ -67,38 +75,51 @@ def dp(gray) :
 
     return tuple([points,point_x1,point_x2,point_y1,point_y2])
 
+#Webcam object
 cam = cv2.VideoCapture(0)
 
 while(cam.isOpened()) :
+
+    if(key==27) :
+        break
+    
+    #Get webcam screen
     ret, img = cam.read()
 
+    #Calibrating webcam
     dst = Dist.Undistort(img)
 
     h, w = dst.shape[:2]
 
+    #Grayscale image
     gray = cv2.cvtColor(dst,cv2.COLOR_BGR2GRAY)
 
+    #Canny image
     dst = auto.AutoCanny(gray)
 
-    dst = dst[20:420, 100:500]
+    #Crop image
+    dst = dst[15:415, 100:500]
 
+    #Dilate to enhance image
     dst = cv2.morphologyEx(dst, cv2.MORPH_DILATE, kernel, iterations=1)
-#    print(dst.shape[:])
+    
+    #Construct blank image
     pic = dst.copy()
     pic[:] = 0
 
+    #Get border points
     points = dp(dst)
 
+    #Visualize border image
     for (x,y) in points[0] :
         cv2.circle(pic,(x,y),1,(255,255,255),-1)
-
-#    pic = cv2.morphologyEx(pic, cv2.MORPH_OPEN, kernel, iterations=1)
-
+    
     len_x = []
     len_y = []
 
     key = cv2.waitKey(10)
 
+    #Press 's' to get thickness of the feature
     if(key==ord('s')) :
         for (x,y) in points[1] :
             for (u,v) in points[2] :
@@ -109,12 +130,10 @@ while(cam.isOpened()) :
                 if y==v :
                     len_x.append(u-x)
         print(len_x)
-
-    if(key==27) :
-        break
+        
     cv2.imshow("scan",pic)
     cv2.imshow("canny",dst)
 
+#Finalize
 cam.release()
-
 cv2.destroyAllWindows()
