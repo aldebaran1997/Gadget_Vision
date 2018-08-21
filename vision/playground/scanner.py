@@ -80,6 +80,10 @@ cam = cv2.VideoCapture(0)
 
 while(cam.isOpened()) :
 
+    #Input key
+    key = cv2.waitKey(10)
+
+    #Program exit
     if(key==27) :
         break
     
@@ -116,10 +120,9 @@ while(cam.isOpened()) :
     for (x,y) in points[0] :
         cv2.circle(pic1,(x,y),1,(255,255,255),-1)
     
+    #Thickness of x and y
     len_x = []
     len_y = []
-
-    key = cv2.waitKey(10)
 
     #Press 's' to get and visualize thickness
     if(key==ord('s')) :
@@ -140,6 +143,7 @@ while(cam.isOpened()) :
                 cv2.circle(pic2,(i,j),1,(np.sqrt(len_x[i]*len_y[j])/2,np.sqrt(len_x[i]*len_y[j])/2,np.sqrt(len_x[i]*len_y[j])/2),-1)
         cv2.imshow("Art of Goo",pic2)
         
+    #Monitor
     cv2.imshow("Border",pic1)
     cv2.imshow("Canny",dst)
 
