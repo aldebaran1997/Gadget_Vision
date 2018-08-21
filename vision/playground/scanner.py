@@ -31,7 +31,7 @@ def dp(img) :
             else :
                 if y==j-1 :
                     points.append((x, 0))
-                    point_x2.append((x, 0))
+                    point_x1.append((x, 0))
                     break
 
     #Border from down to up
@@ -44,7 +44,7 @@ def dp(img) :
             else :
                 if y==j-1 :
                     points.append((x,j-1))
-                    point_x1.append((x,j-1))
+                    point_x2.append((x,j-1))
                     break
 
     #Border from left to right
@@ -57,7 +57,7 @@ def dp(img) :
             else :
                 if x==i-1 :
                     points.append((0, y))
-                    point_y2.append((0, y))
+                    point_y1.append((0, y))
                     break
 
     #Border from right to left
@@ -70,7 +70,7 @@ def dp(img) :
             else :
                 if x==i-1 :
                     points.append((i-1, y))
-                    point_y1.append((i-1, y))
+                    point_y2.append((i-1, y))
                     break
 
     return tuple([points,point_x1,point_x2,point_y1,point_y2])
@@ -104,35 +104,44 @@ while(cam.isOpened()) :
     dst = cv2.morphologyEx(dst, cv2.MORPH_DILATE, kernel, iterations=1)
     
     #Construct blank image
-    pic = dst.copy()
-    pic[:] = 0
+    pic1 = dst.copy()
+    pic1[:] = 0
+    pic2 = dst.copy()
+    pic2[:] = 0
 
     #Get border points
     points = dp(dst)
 
     #Visualize border image
     for (x,y) in points[0] :
-        cv2.circle(pic,(x,y),1,(255,255,255),-1)
+        cv2.circle(pic1,(x,y),1,(255,255,255),-1)
     
     len_x = []
     len_y = []
 
     key = cv2.waitKey(10)
 
-    #Press 's' to get thickness of the feature
+    #Press 's' to get and visualize thickness
     if(key==ord('s')) :
+        
+        #y-thickness (up-down)
         for (x,y) in points[1] :
             for (u,v) in points[2] :
                 if x==u :
                     len_y.append(v-y)
+        #x-thickness (right-left)
         for (x,y) in points[3] :
             for (u,v) in points[4] :
                 if y==v :
                     len_x.append(u-x)
-        print(len_x)
+        #Visualize
+        for j in range(len(points[2])) :
+            for i in range(len(points[1])) :
+                cv2.circle(pic2,(i,j),1,(np.sqrt(len_x[i]*len_y[j])/2,np.sqrt(len_x[i]*len_y[j])/2,np.sqrt(len_x[i]*len_y[j])/2),-1)
+        cv2.imshow("Art of Goo",pic2)
         
-    cv2.imshow("scan",pic)
-    cv2.imshow("canny",dst)
+    cv2.imshow("Border",pic1)
+    cv2.imshow("Canny",dst)
 
 #Finalize
 cam.release()
